@@ -1,6 +1,6 @@
 import imgCardTpl from './templates/imgCardTpl.hbs';
 import './sass/main.scss';
-import { searchForm, gallery, loadMoreButton } from './js/refs';
+import { searchForm, gallery, search, loadMoreButton } from './js/refs';
 import ImagesApiService from './js/apiService';
 import LoadMoreBtn from './js/loadMoreBtn';
 
@@ -12,8 +12,6 @@ const loadMoreBtn = new LoadMoreBtn({
   selector: '[data-action="load-more"]',
   hidden: true,
 });
-
-loadMoreBtn.refs.button.addEventListener('click', getImages);
 
 function onSearch(event) {
   event.preventDefault();
@@ -29,21 +27,24 @@ function getImages() {
   loadMoreBtn.disable();
   imgApiService.fetchImages().then(images => {
     imgMarkup(images);
-    loadMoreBtn.enable();
   });
+  loadMoreBtn.enable();
 }
 
 function imgMarkup(images) {
   const imgMarkup = imgCardTpl(images);
-  //console.log(imgMarkup);
+  // console.log(imgMarkup);
   gallery.insertAdjacentHTML('beforeend', imgMarkup);
-  handleButtonClick();
 }
 
 function clearGallery() {
   gallery.innerHTML = '';
 }
 
-function handleButtonClick() {
+loadMoreBtn.refs.button.addEventListener('click', handleButtonClick);
+
+async function handleButtonClick(e) {
+  const images = await imgApiService.fetchImages().then(images => images);
+  imgMarkup(images);
   gallery.scrollIntoView({ block: 'end', behavior: 'smooth' });
 }
