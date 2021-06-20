@@ -1,3 +1,4 @@
+// import spinner from './js/spinner'
 import imgCardTpl from './templates/imgCardTpl.hbs';
 import './sass/main.scss';
 import { searchForm, gallery, search, loadMoreButton } from './js/refs';
